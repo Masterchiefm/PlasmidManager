@@ -1,5 +1,5 @@
 import sys
-import time
+
 
 import dataBase
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
