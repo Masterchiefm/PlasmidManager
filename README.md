@@ -11,7 +11,7 @@
 点击此处获取[最新release](https://github.com/Masterchiefm/PlasmidManager/releases)
 选择exe文件或者zip文件下载即可。
 ## 使用截图
-![](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/0.png)
+![](https://raw.githubusercontent.com/Masterchiefm/PlasmidManager/master/screenShot/0.png)
 ### 1. 批量登记质粒
 将文件夹拖入识别区，点击 “添加” 即可将文件夹一级目录下的所有.dna文件和.gb文件批量导入管理库。别忘了点击添加之前，选择合适的构建状态！
 ![批量导入](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/1.gif)
