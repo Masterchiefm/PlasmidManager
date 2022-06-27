@@ -25,6 +25,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.showTable()
 
 
+
         #self.pushButton_AutoAdd.clicked.connect(self.autoFill)
         self.pushButton_add.clicked.connect(self.add)
         self.pushButton_WriteTable.clicked.connect(self.saveTable)
@@ -46,9 +47,61 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         self.tableWidget.currentCellChanged.connect(self.showSelection)
         #self.tableWidget.itemSelectionChanged.connect(self.changeSelectedTable)
-        self.tableWidget.itemChanged.connect(self.changeSelectedTable)
-
+        #self.tableWidget.itemChanged.connect(self.changeSelectedTable)
+        self.tableWidget.itemSelectionChanged.connect(self.saveChange)
         self.textEdit_recognitionArea2.setStyleSheet("background:gray")
+
+        self.selectedData = ''
+        self.selectedRow = 0
+        self.selectedCol = 0
+        self.oldID = ""
+
+
+
+    def saveChange(self):
+        try:
+            index = self.tableWidget.selectionModel().currentIndex()
+            row = int(index.row())
+            column = int(index.column())
+
+            # print(str(row)+str(column)+"changed")
+            id = self.tableWidget.item(row, 7).text()
+
+            #print("\n\n #####" + id + " selected")
+            data = self.tableWidget.item(row,column).text()
+            oldData = self.selectedData
+            #print("oldData is " + self.selectedData)
+            #print("selected " + data)
+            nowData = self.tableWidget.item(self.selectedRow,self.selectedCol).text()
+            #print("之前选的data现在是 " + nowData)
+
+
+            self.selectedData = data
+            #print(self.selectedData)
+            if nowData != oldData:
+                lable = {
+                    0: "abbr",
+                    1: "name",
+                    2: "status",
+                    4: "tag",
+                    3: "info",
+                    5: "path",
+                    6: "id"
+                }
+                if self.oldID != "":
+                    self.table.table[self.oldID][lable[column]] = nowData
+                    self.table.writeJson()
+                    #print("changed")
+
+            self.selectedRow = row
+            self.selectedCol = column
+            self.oldID = id
+
+
+
+
+        except Exception as e:
+            print(e)
 
 
 
@@ -154,7 +207,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
     def showTable(self):
-        t0 = time.perf_counter()
+        #t0 = time.perf_counter()
         sheet = self.table.toTable()
         index = 0
         self.tableWidget.hide()
@@ -198,9 +251,9 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                 statusItem.setForeground(brushY)
             else:
                 statusItem.setForeground(brushB)
-            T0 = time.perf_counter()
+            #T0 = time.perf_counter()
             self.tableWidget.setItem(index, 2, statusItem)
-            T1 = time.perf_counter()
+            #T1 = time.perf_counter()
             self.tableWidget.setItem(index, 4, QTableWidgetItem(data["tag"]))
             self.tableWidget.setItem(index, 3, QTableWidgetItem(data["info"]))
             pathItem = QTableWidgetItem(data["path"])
@@ -217,46 +270,23 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             self.tableWidget.setItem(index,6,importedTime)
             index = index + 1
 
-            dT = float(T1 - T0)
-            print("循环内用时" + str(dT))
+            #dT = float(T1 - T0)
+            #print("循环内用时" + str(dT))
         self.tableWidget.resizeColumnToContents(0)
         self.tableWidget.resizeColumnToContents(1)
         self.tableWidget.resizeColumnToContents(2)
         self.tableWidget.resizeColumnToContents(3)
         self.tableWidget.resizeColumnToContents(6)
-        t1 = time.perf_counter()
-        dt = float(t1 - t0)
+        #t#1 = time.perf_counter()
+        #dt = float(t1 - t0)
         self.tableWidget.show()
-        print("总时"+str(dt))
+        #print("总时"+str(dt))
 
     def saveTable(self):
         path,fileType= QFileDialog.getSaveFileName(self,"path","","excel(*.xlsx)")
         #print(path)
         self.table.writeTable(path)
 
-    def changeSelectedTable(self):
-        try:
-            index = self.tableWidget.selectionModel().currentIndex()
-            row = index.row()
-            column = index.column()
-            #print(str(row)+str(column)+"changed")
-            id = self.tableWidget.item(row,7).text()
-            #print(id)
-            lable = {
-                0:"abbr",
-                1:"name",
-                2:"status",
-                4:"tag",
-                3:"info",
-                5:"path",
-                6:"id"
-            }
-
-            self.table.table[id][lable[column]] = self.tableWidget.item(row,column).text()
-        except Exception as e:
-            #print(e)
-            pass
-        self.table.writeJson()
 
 
 
