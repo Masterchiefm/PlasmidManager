@@ -24,4 +24,6 @@
 或者，在右侧选项卡中进行精确修改。**禁止修改id！**
 ![信息修改](https://github.com/Masterchiefm/PlasmidManager/raw/master/screenShot/4.gif)
 
-
+## 4. 打开文件
+在本程序中进行登记的内容，均能直接从下方按钮中打开文件或者打开文件所在目录。
+![打开文件](https://github.com/Masterchiefm/PlasmidManager/raw/master/screenShot/5.gif)
