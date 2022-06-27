@@ -64,7 +64,6 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             row = int(index.row())
             column = int(index.column())
 
-            # print(str(row)+str(column)+"changed")
             id = self.tableWidget.item(row, 7).text()
 
             #print("\n\n #####" + id + " selected")
@@ -89,9 +88,9 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                     6: "id"
                 }
                 if self.oldID != "":
-                    self.table.table[self.oldID][lable[column]] = nowData
+                    self.table.table[self.oldID][lable[self.selectedCol]] = nowData
                     self.table.writeJson()
-                    #print("changed")
+                   # print("changed")
 
             self.selectedRow = row
             self.selectedCol = column
