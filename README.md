@@ -29,4 +29,4 @@
 
 ## 4. 打开文件
 在本程序中进行登记的内容，均能直接从下方按钮中打开文件或者打开文件所在目录。
-![打开文件](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/5.gif)
+![打开文件](https://raw.githubusercontent.com/Masterchiefm/PlasmidManager/master/screenShot/5.gif)
