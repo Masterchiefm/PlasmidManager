@@ -8,7 +8,7 @@
 4. 分享/导入质粒表。你可以分享/备份整个表格，或者只分享选中的一小部分。分享的表格还能再次导入的哦！
 
 ## 下载地址
-1. [下载地址一](https://gitee.com/MasterChiefm/PlasmidManager/releases/v1.2.1)
+1. [下载地址一](https://gitee.com/MasterChiefm/PlasmidManager/releases)
 1. 点击此处获取[最新release](https://github.com/Masterchiefm/PlasmidManager/releases)
 选择exe文件或者zip文件下载即可。
 ## 使用截图
