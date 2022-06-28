@@ -9,7 +9,7 @@
 
 ## 下载地址
 1. [下载地址一](https://gitee.com/MasterChiefm/PlasmidManager/releases)
-1. 点击此处获取[最新release](https://github.com/Masterchiefm/PlasmidManager/releases)
+1. [下载地址二](https://github.com/Masterchiefm/PlasmidManager/releases)
 选择exe文件或者zip文件下载即可。
 ## 使用截图
 ![](https://raw.githubusercontent.com/Masterchiefm/PlasmidManager/master/screenShot/0.png)

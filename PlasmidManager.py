@@ -20,7 +20,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
     def __init__(self, parent=None):
-        self.version = "1.2.2"
+        self.version = "1.2.1"
         super(MyMainWin, self).__init__(parent)
         self.table = dataBase.TABLE()
         try:
