@@ -10,7 +10,7 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from GUI import Ui_MainWindow
 
-from subprocess import check_output
+from subprocess import getstatusoutput
 
 from requests import get
 from json import loads
@@ -31,6 +31,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.tableWidget.setSortingEnabled(True)
         self.showTable()
+
+        self.setWindowTitle("项目构建管理-v" + self.version)
 
 
 
@@ -73,12 +75,19 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
     def checkTaskList(self):
-        taskList = check_output(['tasklist'], timeout=2)
+        taskList = getstatusoutput(['tasklist'])[1]
+
         # print(taskList)
-        if "PlasmidManager" in str(taskList):
+        instance = taskList.count("PlasmidManager")
+        if instance == 1:
+            pass
+        elif instance == 0:
+            pass
+        else:
             QMessageBox.about(self,"错误","不能同时打开相同的进程")
-            self.close()
-            exit()
+            print(instance)
+
+            sys.exit()
 
 
 
