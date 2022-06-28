@@ -10,9 +10,17 @@ from PyQt5.QtWidgets import QMessageBox, QFileDialog
 
 from GUI import Ui_MainWindow
 
+from subprocess import check_output
+
+from requests import get
+from json import loads
+
 
 class MyMainWin(QMainWindow, Ui_MainWindow):
+
+
     def __init__(self, parent=None):
+        self.version = "1.2.2"
         super(MyMainWin, self).__init__(parent)
         self.table = dataBase.TABLE()
         try:
@@ -23,6 +31,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.tableWidget.setSortingEnabled(True)
         self.showTable()
+
+
 
 
 
@@ -50,11 +60,67 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         #self.tableWidget.itemChanged.connect(self.changeSelectedTable)
         self.tableWidget.itemSelectionChanged.connect(self.saveChange)
         self.textEdit_recognitionArea2.setStyleSheet("background:gray")
+        self.action.triggered.connect(self.checkUpdate)
+        self.action_2.triggered.connect(self.about)
+        self.action_4.triggered.connect(self.donate)
+
+        self.checkTaskList()
 
         self.selectedData = ''
         self.selectedRow = 0
         self.selectedCol = 0
         self.oldID = ""
+
+
+    def checkTaskList(self):
+        taskList = check_output(['tasklist'], timeout=2)
+        # print(taskList)
+        if "PlasmidManager" in str(taskList):
+            QMessageBox.about(self,"错误","不能同时打开相同的进程")
+            self.close()
+            exit()
+
+
+
+    def checkUpdate(self):
+        #print('sfd')
+        proxies = {
+            'http': '',
+            'https': '',
+        }
+        latestInfo = get("https://api.github.com/repos/Masterchiefm/PlasmidManager/releases/latest",timeout=2,proxies=proxies)
+        try:
+            info = latestInfo.text
+            info = loads(info)
+            latestVersion = info["tag_name"]
+            releaseInfo = info["body"]
+            #print(latestVersion)
+            if latestVersion == self.version:
+                QMessageBox.about(self, "更新", "已经是最新")
+            else:
+                msg = latestVersion + "\n" + releaseInfo
+                QMessageBox.about(self,"更新",msg)
+                os.startfile("https://gitee.com/MasterChiefm/PlasmidManager/releases")
+
+
+
+        except Exception as e:
+            QMessageBox.about(self,"网络错误","无法连接到GitHub服务器")
+            print(e)
+
+    def about(self):
+        try:
+            os.startfile("https://gitee.com/MasterChiefm/PlasmidManager")
+        except:
+            pass
+
+    def donate(self):
+        try:
+            os.startfile("https://cdn.jsdelivr.net/gh/Masterchiefm/pictures/68747470733a2f2f6d6f716971696e2e636e2f77702d636f6e74656e742f75706c6f6164732f323032302f30342f64617368616e672e706e67.png")
+        except:
+            pass
+
+
 
 
 
