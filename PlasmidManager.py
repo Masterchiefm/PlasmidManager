@@ -1,27 +1,39 @@
-import sys
+# PlasmidManager
+# By M.Q. at Shanghai
+# 2022.06.29
+# dependence：
+# PyQt5,qt-tools,requests
 
-
-import dataBase
+# GUI显示相关模块
 from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
-import pandas as pd
-import os
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QMessageBox, QFileDialog
-
 from GUI import Ui_MainWindow
 
+# 系统进程管理相关
 from subprocess import getstatusoutput
-
 from requests import get
 from json import loads
+import os
+import sys
+
+# 数据处理相关
+import pandas as pd
+import dataBase
+
+
 
 
 class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
     def __init__(self, parent=None):
+        """质粒管理工具"""
         self.version = "1.2.1"
+
         super(MyMainWin, self).__init__(parent)
+
+        #读取/初始化数据库
         self.table = dataBase.TABLE()
         try:
             self.table.readJson("data.json")
@@ -32,43 +44,32 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.tableWidget.setSortingEnabled(True)
         self.showTable()
 
-        self.setWindowTitle("项目构建管理-v" + self.version)
-
-
-
-
-
-        #self.pushButton_AutoAdd.clicked.connect(self.autoFill)
-        self.pushButton_add.clicked.connect(self.add)
-        self.pushButton_WriteTable.clicked.connect(self.saveTable)
-        self.textEdit_recognitionArea.textChanged.connect(self.autoFill)
-        self.textEdit_recognitionArea2.textChanged.connect(self.autoFill2)
-        self.pushButton_clear.clicked.connect(self.clear)
-        self.pushButton_Open.clicked.connect(self.openFile)
-        self.pushButton_del.clicked.connect(self.delSeleted)
+        self.setWindowTitle("项目构建管理-v" + self.version)  #根据版本号改应用标题
+        self.pushButton_add.clicked.connect(self.add)   #添加项目
+        self.pushButton_WriteTable.clicked.connect(self.saveTable)      #将所有数据导出为excel表格
+        self.textEdit_recognitionArea.textChanged.connect(self.autoFill)    #自动识别区1，用于添加
+        self.textEdit_recognitionArea2.textChanged.connect(self.autoFill2)  #自动识别区2，用于识别修改后的文件路径
+        self.textEdit_recognitionArea2.setStyleSheet("background:gray")
+        self.pushButton_clear.clicked.connect(self.clear)   #清除识别区以及自动填入的内容
+        self.pushButton_Open.clicked.connect(self.openFile)     #打开文件
+        self.pushButton_del.clicked.connect(self.delSeleted)    #删除单条记录
         self.pushButton_search.clicked.connect(self.search)
         self.pushButton_filter.clicked.connect(self.statusFilter)
-        self.pushButton_edit.clicked.connect(self.edit)
-        self.pushButton_clear_2.clicked.connect(self.clear)
-        self.pushButton_ImportTable.clicked.connect(self.importSheet)
-        self.pushButton_share.clicked.connect(self.share)
-        #self.pushButton_addPath.clicked.connect(self.autoFillPath)
-        self.pushButton_openPath.clicked.connect(self.openPath)
+        self.pushButton_edit.clicked.connect(self.edit)     #保存更改
+        self.pushButton_clear_2.clicked.connect(self.clear)     #更改区的信息清除
+        self.pushButton_ImportTable.clicked.connect(self.importSheet)   #从excel表格导入数据
+        self.pushButton_share.clicked.connect(self.share)   #导出选中项目为表格
+        self.pushButton_openPath.clicked.connect(self.openPath)     #打开文件所在路径
+        self.tableWidget.currentCellChanged.connect(self.showSelection)     #读取用户选定的格子信息，并填入右侧修改框中。
 
-
-
-        self.tableWidget.currentCellChanged.connect(self.showSelection)
-        #self.tableWidget.itemSelectionChanged.connect(self.changeSelectedTable)
-        #self.tableWidget.itemChanged.connect(self.changeSelectedTable)
-        self.tableWidget.itemSelectionChanged.connect(self.saveChange)
-        self.textEdit_recognitionArea2.setStyleSheet("background:gray")
-        self.action.triggered.connect(self.checkUpdate)
+        self.action.triggered.connect(self.checkUpdate)     #菜单栏
         self.action_2.triggered.connect(self.about)
         self.action_4.triggered.connect(self.donate)
 
-        self.checkTaskList()
+        self.checkTaskList()    #进程数量检查，确保只有一个进程运行
 
-        self.selectedData = ''
+        self.tableWidget.itemSelectionChanged.connect(self.saveChange)  # 自动读取并保存用户对格子的修改
+        self.selectedData = ''  #初始化修改的位置0，如果原始数据与现在数据不一样，就保存修改。
         self.selectedRow = 0
         self.selectedCol = 0
         self.oldID = ""
@@ -79,31 +80,32 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         # print(taskList)
         instance = taskList.count("PlasmidManager")
-        if instance == 1:
+        if instance == 1: #打包好后，本程序会算是一个运行中的实例，所以会是1
             pass
-        elif instance == 0:
+        elif instance == 0:    #调试的时候，实例会是0
             pass
         else:
             QMessageBox.about(self,"错误","不能同时打开相同的进程")
             print(instance)
-
             sys.exit()
 
 
 
     def checkUpdate(self):
-        #print('sfd')
-        proxies = {
-            'http': '',
-            'https': '',
-        }
-        latestInfo = get("https://api.github.com/repos/Masterchiefm/PlasmidManager/releases/latest",timeout=2,proxies=proxies)
+        """使用requests模块和GitHub api获取最新版本"""
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
+        latestInfo = get("https://api.github.com/repos/Masterchiefm/PlasmidManager/releases/latest", timeout=2,  headers= headers)
+        print(latestInfo)
         try:
             info = latestInfo.text
             info = loads(info)
+            print(info)
             latestVersion = info["tag_name"]
             releaseInfo = info["body"]
             #print(latestVersion)
+
             if latestVersion == self.version:
                 QMessageBox.about(self, "更新", "已经是最新")
             else:
@@ -118,12 +120,14 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             print(e)
 
     def about(self):
+        """打开应用主页"""
         try:
             os.startfile("https://gitee.com/MasterChiefm/PlasmidManager")
         except:
             pass
 
     def donate(self):
+        """收款码"""
         try:
             os.startfile("https://cdn.jsdelivr.net/gh/Masterchiefm/pictures/68747470733a2f2f6d6f716971696e2e636e2f77702d636f6e74656e742f75706c6f6164732f323032302f30342f64617368616e672e706e67.png")
         except:
