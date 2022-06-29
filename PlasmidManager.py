@@ -29,7 +29,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "1.2.1"
+        self.version = "1.2.2"
 
         super(MyMainWin, self).__init__(parent)
 
