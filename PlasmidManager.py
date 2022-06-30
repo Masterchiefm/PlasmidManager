@@ -29,7 +29,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "1.2.2"
+        self.version = "1.2.3"
 
         super(MyMainWin, self).__init__(parent)
 
@@ -42,7 +42,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             self.table.readJson("data.json")
         self.setupUi(self)
         self.tableWidget.setSortingEnabled(True)
-        self.showTable()
+        self.showArrangedTable(self.table.toTable())
 
         self.setWindowTitle("项目构建管理-v" + self.version)  #根据版本号改应用标题
         self.pushButton_add.clicked.connect(self.add)   #添加项目
@@ -185,10 +185,10 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
 
-    def autoFillPath(self):
+    def autoFillPath(self,path):
         #print("dddd")
-        file = self.textEdit_recognitionArea.toPlainText()
-        filePath = file.replace("file:///","")
+
+        filePath = path.replace("\n","")
         fileAbsPaths = []
         if os.path.isdir(filePath):
             files = os.listdir(filePath)
@@ -232,14 +232,14 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                 self.table.addItem(plasmid)
 
         self.table.writeJson()
-        self.showTable()
+        self.showArrangedTable(self.table.toTable())
         self.clear()
 
     def autoFill(self):
         file = self.textEdit_recognitionArea.toPlainText()
         filePath = file.replace("file:///", "")
         name = file.split("/")[-1]
-        self.lineEdit_name.setText(name)
+        self.plainTextEdit_name.setPlainText(name)
         self.lineEdit_path.setText(filePath)
 
 
@@ -251,114 +251,44 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def add(self):
         file = self.textEdit_recognitionArea.toPlainText()
-        filePath = file.replace("file:///", "")
-        if os.path.isdir(filePath):
-            self.autoFillPath()
-            return 0
+        files = file.split("file:///")
+        print(files)
+        for f in files:
+            if f == '':
+                pass
+            else:
+                if os.path.isdir(f.replace("\n","")):
+                    self.autoFillPath(f.replace("\n",""))
+                else:
+                    print('s')
+                    plasmid = dataBase.PLASMID()
+                    plasmid.info["name"] = f.split("/")[-1].replace("\n","")
+                    plasmid.info["abbr"] = self.lineEdit_abbr.text()
+                    tags = self.lineEdit_tag.text().replace("，", ",")
+                    plasmid.info["tag"] = tags
+                    plasmid.info["info"] = self.plainTextEdit_info.toPlainText()
+                    plasmid.info["path"] = f.replace("\n","")
+                    plasmid.info["status"] = self.comboBox.currentText()
+                    if plasmid.info["name"] == "":
+                        pass
+                    else:
+                        self.table.addItem(plasmid)
 
 
-        plasmid = dataBase.PLASMID()
-        plasmid.info["name"] = self.lineEdit_name.text()
-        plasmid.info["abbr"] = self.lineEdit_abbr.text()
-        tags = self.lineEdit_tag.text().replace("，",",")
-        plasmid.info["tag"] = tags
-        plasmid.info["info"] = self.lineEdit_info.text()
-        plasmid.info["path"] = self.lineEdit_path.text()
-        plasmid.info["status"] = self.comboBox.currentText()
-        if plasmid.info["name"] == "":
-            pass
-        else:
-            self.table.addItem(plasmid)
-            self.table.writeJson()
-        #print(self.table.table)
-        self.showTable()
+        self.table.writeJson()
+        self.showArrangedTable(self.table.toTable())
         self.clear()
+        return 0
 
     def clear(self):
         self.lineEdit_tag.clear()
         self.lineEdit_path.clear()
-        self.lineEdit_name.clear()
+        self.plainTextEdit_name.clear()
         self.lineEdit_abbr.clear()
-        self.lineEdit_info.clear()
+        self.plainTextEdit_info.clear()
         self.textEdit_recognitionArea.clear()
         self.textEdit_recognitionArea2.clear()
 
-
-    def showTable(self):
-        #t0 = time.perf_counter()
-        sheet = self.table.toTable()
-        index = 0
-        self.tableWidget.hide()
-        self.tableWidget.setRowCount(len(sheet.index))
-        brushR = QtGui.QBrush(QtGui.QColor(200, 86, 75))
-        brushR.setStyle(QtCore.Qt.SolidPattern)
-
-        brushG = QtGui.QBrush(QtGui.QColor(110,200,82))
-        brushG.setStyle(QtCore.Qt.SolidPattern)
-
-        brushY = QtGui.QBrush(QtGui.QColor(255, 0, 255))
-        brushY.setStyle(QtCore.Qt.SolidPattern)
-
-        brushB = QtGui.QBrush(QtGui.QColor(0, 0, 255))
-        brushB.setStyle(QtCore.Qt.SolidPattern)
-
-        for id in sheet.index:
-
-
-
-
-
-            #print(id)
-            name = QTableWidgetItem(sheet.loc[id,"name"])
-
-            data = dict(sheet.loc[id])
-
-
-            self.tableWidget.setItem(index,0,QTableWidgetItem(data["abbr"]))
-            status = data["status"]
-            statusItem = QTableWidgetItem(status)
-            importedTime = QTableWidgetItem(data["time"])
-
-            if "完成" in status:
-                pass
-            elif "测" in status:
-                statusItem.setForeground(brushR)
-            elif "未构建" in status:
-                statusItem.setForeground(brushG)
-            elif "失败" in status:
-                statusItem.setForeground(brushY)
-            else:
-                statusItem.setForeground(brushB)
-            #T0 = time.perf_counter()
-            self.tableWidget.setItem(index, 2, statusItem)
-            #T1 = time.perf_counter()
-            self.tableWidget.setItem(index, 4, QTableWidgetItem(data["tag"]))
-            self.tableWidget.setItem(index, 3, QTableWidgetItem(data["info"]))
-            pathItem = QTableWidgetItem(data["path"])
-            if os.path.exists(data["path"]):
-                pass
-            else:
-                pathItem.setForeground(brushR)
-                name.setForeground(brushR)
-
-            self.tableWidget.setItem(index, 1, name)
-            self.tableWidget.setItem(index, 5, pathItem)
-
-            self.tableWidget.setItem(index, 7, QTableWidgetItem(id))
-            self.tableWidget.setItem(index,6,importedTime)
-            index = index + 1
-
-            #dT = float(T1 - T0)
-            #print("循环内用时" + str(dT))
-        self.tableWidget.resizeColumnToContents(0)
-        self.tableWidget.resizeColumnToContents(1)
-        self.tableWidget.resizeColumnToContents(2)
-        self.tableWidget.resizeColumnToContents(3)
-        self.tableWidget.resizeColumnToContents(6)
-        #t#1 = time.perf_counter()
-        #dt = float(t1 - t0)
-        self.tableWidget.show()
-        #print("总时"+str(dt))
 
     def saveTable(self):
         path,fileType= QFileDialog.getSaveFileName(self,"path","","excel(*.xlsx)")
@@ -404,50 +334,60 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         except Exception as e:
             print(e)
             #pass
-        self.showTable()
+        self.showArrangedTable(self.table.toTable())
 
     def showArrangedTable(self,sheet):
-        sheet = sheet
-        #index = 0
+
         self.tableWidget.setRowCount(len(sheet.index))
+        brushR = QtGui.QBrush(QtGui.QColor(200, 86, 75))
+        brushR.setStyle(QtCore.Qt.SolidPattern)
+
+        brushG = QtGui.QBrush(QtGui.QColor(110, 200, 82))
+        brushG.setStyle(QtCore.Qt.SolidPattern)
+
+        brushY = QtGui.QBrush(QtGui.QColor(255, 0, 255))
+        brushY.setStyle(QtCore.Qt.SolidPattern)
+
+        brushB = QtGui.QBrush(QtGui.QColor(0, 0, 255))
+        brushB.setStyle(QtCore.Qt.SolidPattern)
+
         for id in sheet.index:
             # print(id)
             name = QTableWidgetItem(sheet.loc[id, "name"])
             index = sheet.index.get_loc(id)
-            self.tableWidget.setItem(index, 1, name)
-
-            self.tableWidget.setItem(index, 0, QTableWidgetItem(sheet.loc[id, "abbr"]))
-            # tag = sheet.loc[id,"tag"]
 
             status = sheet.loc[id, "status"]
             statusItem = QTableWidgetItem(status)
 
             if "完成" in status:
                 pass
-
             elif "测" in status:
-                brush = QtGui.QBrush(QtGui.QColor(255, 0, 0))
-                brush.setStyle(QtCore.Qt.SolidPattern)
-                statusItem.setForeground(brush)
-
+                statusItem.setForeground(brushR)
             elif "未构建" in status:
-                brush = QtGui.QBrush(QtGui.QColor(0, 255, 0))
-                brush.setStyle(QtCore.Qt.SolidPattern)
-                statusItem.setForeground(brush)
+                statusItem.setForeground(brushG)
+            elif "失败" in status:
+                statusItem.setForeground(brushY)
             else:
-                brush = QtGui.QBrush(QtGui.QColor(0, 0, 255))
-                brush.setStyle(QtCore.Qt.SolidPattern)
-                statusItem.setForeground(brush)
+                statusItem.setForeground(brushB)
+
+            path = sheet.loc[id,"path"]
+            pathItem = QTableWidgetItem(path)
+            if os.path.exists(path):
+                pass
+            else:
+                pathItem.setForeground(brushR)
+                name.setForeground(brushR)
 
             self.tableWidget.setItem(index, 2, statusItem)
-
+            self.tableWidget.setItem(index, 1, name)
+            self.tableWidget.setItem(index, 5, pathItem)
+            self.tableWidget.setItem(index, 0, QTableWidgetItem(sheet.loc[id, "abbr"]))
             self.tableWidget.setItem(index, 4, QTableWidgetItem(sheet.loc[id, "tag"]))
             self.tableWidget.setItem(index, 3, QTableWidgetItem(sheet.loc[id, "info"]))
-            self.tableWidget.setItem(index, 5, QTableWidgetItem(sheet.loc[id, "path"]))
             self.tableWidget.setItem(index,6,QTableWidgetItem(sheet.loc[id,"time"]))
-
             self.tableWidget.setItem(index, 7, QTableWidgetItem(id))
-            #index = index + 1
+
+
         self.tableWidget.resizeColumnToContents(0)
         self.tableWidget.resizeColumnToContents(1)
         self.tableWidget.resizeColumnToContents(2)
@@ -500,7 +440,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         if text == "":
             return 0
         elif text == "显示全部":
-            self.showTable()
+            self.showArrangedTable(self.table.toTable())
+            #QMessageBox.about(self,"refresh","done!")
             return 0
 
         sheet = self.table.toTable()
@@ -528,26 +469,28 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                 7:"id"
             }
 
-            self.lineEdit_selectedName.setText(self.tableWidget.item(row,1).text())
+            self.plainTextEdit_selectedName.setPlainText(self.tableWidget.item(row,1).text())
             self.lineEdit_selectedAbbr.setText(self.tableWidget.item(row,0).text())
-            self.lineEdit_selectedInfo.setText(self.tableWidget.item(row,3).text())
+            self.plainTextEdit_info.setPlainText(self.tableWidget.item(row,3).text())
             self.lineEdit_selectedTag.setText(self.tableWidget.item(row,4).text())
             self.comboBox_selectedStatus.setCurrentText(self.tableWidget.item(row,2).text())
             self.lineEdit_selectedID.setText(self.tableWidget.item(row,7).text())
             self.lineEdit_selectedPath.setText(self.tableWidget.item(row,5).text())
+            self.label_row.setText("当前选择"+str(row+1)+"行,")
+            self.label_col.setText(str(column+1)+"列")
 
 
         except Exception as e:
-            #print(e)
+            print(e)
             pass
 
     def edit(self):
         id = self.lineEdit_selectedID.text()
-        name =self.lineEdit_selectedName.text()
+        name =self.plainTextEdit_name.toPlainText()
         abbr = self.lineEdit_selectedAbbr.text()
         status = self.comboBox_selectedStatus.currentText()
         tag = self.lineEdit_selectedTag.text()
-        info = self.lineEdit_selectedInfo.text()
+        info = self.plainTextEdit_info.toPlainText()
         path = self.lineEdit_selectedPath.text()
         self.table.table[id]["name"] = name
         self.table.table[id]["abbr"] = abbr
@@ -556,7 +499,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.table.table[id]["info"] = info
         self.table.table[id]["path"] = path
         self.table.writeJson()
-        self.showTable()
+        self.showArrangedTable(self.table.toTable())
         QMessageBox.about(self,"修改","完成！")
 
 
@@ -601,7 +544,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
                 self.table.addItem(plasmid)
             self.table.writeJson()
-            self.showTable()
+            self.showArrangedTable(self.table.toTable())
         except:
             QMessageBox.about(self,"错误","不支持该表格形式，请确保表格内有对应列")
 
