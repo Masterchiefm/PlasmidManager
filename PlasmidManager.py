@@ -29,7 +29,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "1.2.3"
+        self.version = "1.2.4"
 
         super(MyMainWin, self).__init__(parent)
 
@@ -471,7 +471,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
             self.plainTextEdit_selectedName.setPlainText(self.tableWidget.item(row,1).text())
             self.lineEdit_selectedAbbr.setText(self.tableWidget.item(row,0).text())
-            self.plainTextEdit_info.setPlainText(self.tableWidget.item(row,3).text())
+            self.plainTextEdit_selectedInfo.setPlainText(self.tableWidget.item(row,3).text())
             self.lineEdit_selectedTag.setText(self.tableWidget.item(row,4).text())
             self.comboBox_selectedStatus.setCurrentText(self.tableWidget.item(row,2).text())
             self.lineEdit_selectedID.setText(self.tableWidget.item(row,7).text())
@@ -486,11 +486,11 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def edit(self):
         id = self.lineEdit_selectedID.text()
-        name =self.plainTextEdit_name.toPlainText()
+        name =self.plainTextEdit_selectedName.toPlainText()
         abbr = self.lineEdit_selectedAbbr.text()
         status = self.comboBox_selectedStatus.currentText()
         tag = self.lineEdit_selectedTag.text()
-        info = self.plainTextEdit_info.toPlainText()
+        info = self.plainTextEdit_selectedInfo.toPlainText()
         path = self.lineEdit_selectedPath.text()
         self.table.table[id]["name"] = name
         self.table.table[id]["abbr"] = abbr
