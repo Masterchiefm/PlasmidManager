@@ -16,13 +16,13 @@
 
 ## 如何安装
 在上面下载地址里点击下载地址一或者二进行下载。打开这个自解压程序
-![安装包](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/start0.png)
+![安装包](https://gitee.com/MasterChiefm/PlasmidManager/raw/master/screenShot/start0.png)
 选择解压路径。如D:/softwares ,然后确认。
-![安装包](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/start2.png)
+![安装包](https://gitee.com/MasterChiefm/PlasmidManager/raw/master/screenShot/start2.png)
 如果有提问是否覆盖，点击Yes To All
-![安装包](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/start3.png)
+![安装包](https://gitee.com/MasterChiefm/PlasmidManager/raw/master/screenShot/start3.png)
 之后，你就可以在D:/softwares文件夹里看到PlasmidManager这个文件夹，打开这个文件夹，找到图标，右键创建快捷方式拉到桌面以便后续使用。
-![安装包](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/start0.png)
+![安装包](https://gitee.com/MasterChiefm/PlasmidManager/raw/master/screenShot/start0.png)
 
 ## 如何使用
 ### 1. 批量登记质粒

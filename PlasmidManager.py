@@ -29,7 +29,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "1.2.4"
+        self.version = "1.2.5"
 
         super(MyMainWin, self).__init__(parent)
 
@@ -68,11 +68,13 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         self.checkTaskList()    #进程数量检查，确保只有一个进程运行
 
-        self.tableWidget.itemSelectionChanged.connect(self.saveChange)  # 自动读取并保存用户对格子的修改
-        self.selectedData = ''  #初始化修改的位置0，如果原始数据与现在数据不一样，就保存修改。
-        self.selectedRow = 0
-        self.selectedCol = 0
-        self.oldID = ""
+        self.pushButton_saveTable.clicked.connect(self.saveChangedTable)
+
+        #self.tableWidget.itemSelectionChanged.connect(self.saveChange)  # 自动读取并保存用户对格子的修改  # 取消该功能，因为他容易改错地方
+        #self.selectedData = ''  #初始化修改的位置0，如果原始数据与现在数据不一样，就保存修改。
+        #self.selectedRow = 0
+        #self.selectedCol = 0
+        #self.oldID = ""
 
 
     def checkTaskList(self):
@@ -133,6 +135,28 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         except:
             pass
 
+    def test(self):
+        print('ss')
+
+    def saveChangedTable(self):
+        rows = self.tableWidget.rowCount()
+        for i in range(rows):
+            id = self.tableWidget.item(i,7).text()
+            abbr = self.tableWidget.item(i,0).text()
+            name = self.tableWidget.item(i,1).text()
+            status = self.tableWidget.item(i,2).text()
+            info = self.tableWidget.item(i,3).text()
+            tag = self.tableWidget.item(i,4).text()
+            path = self.tableWidget.item(i,5).text()
+            self.table.table[id]["name"] = name
+            self.table.table[id]["abbr"] = abbr
+            self.table.table[id]["status"] = status
+            self.table.table[id]["info"] = info
+            self.table.table[id]["tag"] = tag
+            self.table.table[id]["path"] = path
+
+        self.table.writeJson()
+            #print(id)
 
 
 
@@ -353,7 +377,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         for id in sheet.index:
             # print(id)
-            name = QTableWidgetItem(sheet.loc[id, "name"])
+            name = sheet.loc[id, "name"]
+            nameItem = QTableWidgetItem(name)
             index = sheet.index.get_loc(id)
 
             status = sheet.loc[id, "status"]
@@ -373,13 +398,19 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             path = sheet.loc[id,"path"]
             pathItem = QTableWidgetItem(path)
             if os.path.exists(path):
-                pass
+                if name in path:
+                    pass
+                else:
+                    nameItem.setForeground(brushB)
             else:
                 pathItem.setForeground(brushR)
-                name.setForeground(brushR)
+                nameItem.setForeground(brushR)
+
+
+
 
             self.tableWidget.setItem(index, 2, statusItem)
-            self.tableWidget.setItem(index, 1, name)
+            self.tableWidget.setItem(index, 1, nameItem)
             self.tableWidget.setItem(index, 5, pathItem)
             self.tableWidget.setItem(index, 0, QTableWidgetItem(sheet.loc[id, "abbr"]))
             self.tableWidget.setItem(index, 4, QTableWidgetItem(sheet.loc[id, "tag"]))
@@ -392,6 +423,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.tableWidget.resizeColumnToContents(1)
         self.tableWidget.resizeColumnToContents(2)
         self.tableWidget.resizeColumnToContents(3)
+        self.tableWidget.resizeColumnToContents(5)
 
     def search(self):
         text = self.lineEdit_search.text()
