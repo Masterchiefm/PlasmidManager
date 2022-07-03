@@ -34,7 +34,7 @@
 ![批量导入](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/2.gif)
 
 ### 3. 修改信息
-双击表格内容，直接修改，修改后点击其它格子即可保存当前修改。***修改后务必点击旁边的格子以保存，不要直接点刷新！！！***
+双击表格内容，直接修改，修改后点击下方保存按钮。***修改后务必点击保存，不要直接点刷新！！！***
 ![信息修改](https://cdn.jsdelivr.net/gh/Masterchiefm/PlasmidManager/screenShot/3.gif)
 
 或者，在右侧选项卡中进行精确修改。**禁止修改id！**
