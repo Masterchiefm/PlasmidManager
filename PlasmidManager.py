@@ -65,16 +65,52 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.action.triggered.connect(self.checkUpdate)     #菜单栏
         self.action_2.triggered.connect(self.about)
         self.action_4.triggered.connect(self.donate)
+        self.frame_note.hide()
 
         self.checkTaskList()    #进程数量检查，确保只有一个进程运行
 
         self.pushButton_saveTable.clicked.connect(self.saveChangedTable)
+
+        self.pushButton_note.clicked.connect(self.openNoteFrame)
+        self.pushButton_saveNote.clicked.connect(self.saveNote)
+        self.pushButton_clearNote.clicked.connect(self.clearNote)
+        self.tabWidget.setCurrentIndex(0)
 
         #self.tableWidget.itemSelectionChanged.connect(self.saveChange)  # 自动读取并保存用户对格子的修改  # 取消该功能，因为他容易改错地方
         #self.selectedData = ''  #初始化修改的位置0，如果原始数据与现在数据不一样，就保存修改。
         #self.selectedRow = 0
         #self.selectedCol = 0
         #self.oldID = ""
+
+    def openNoteFrame(self):
+        if self.frame_note.isHidden():
+            try:
+                with open("note.txt",'r') as f:
+                    self.textEdit_note.setText(f.read())
+            except:
+                pass
+            self.frame_note.show()
+        else:
+            self.frame_note.hide()
+
+    def clearNote(self):
+        self.textEdit_note.clear()
+        with open("note.txt", 'w') as f:
+            f.write("")
+
+
+
+    def saveNote(self):
+        note = self.textEdit_note.toPlainText()
+        try:
+            with open("note.txt",'w') as f:
+                f.write(note)
+                QMessageBox.about(self,"成功","已保存")
+        except Exception as e:
+            QMessageBox.about(self,"ERR",str(e))
+
+
+
 
 
     def checkTaskList(self):
@@ -156,6 +192,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             self.table.table[id]["path"] = path
 
         self.table.writeJson()
+        QMessageBox.about("成功","已保存")
             #print(id)
 
 
@@ -375,11 +412,14 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         brushB = QtGui.QBrush(QtGui.QColor(0, 0, 255))
         brushB.setStyle(QtCore.Qt.SolidPattern)
 
-        for id in sheet.index:
+        # 按添加时间排序，后添加的放前面。
+        index = 0
+        for id in list(sheet.index)[::-1]:
             # print(id)
             name = sheet.loc[id, "name"]
             nameItem = QTableWidgetItem(name)
-            index = sheet.index.get_loc(id)
+            #index = sheet.index.get_loc(id)
+            #print(index)
 
             status = sheet.loc[id, "status"]
             statusItem = QTableWidgetItem(status)
@@ -417,6 +457,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             self.tableWidget.setItem(index, 3, QTableWidgetItem(sheet.loc[id, "info"]))
             self.tableWidget.setItem(index,6,QTableWidgetItem(sheet.loc[id,"time"]))
             self.tableWidget.setItem(index, 7, QTableWidgetItem(id))
+            index = index + 1
 
 
         self.tableWidget.resizeColumnToContents(0)
@@ -483,6 +524,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.showArrangedTable(newSheet)
 
     def showSelection(self):
+        self.tabWidget.setCurrentIndex(1)
         try:
             index = self.tableWidget.selectionModel().currentIndex()
             row = index.row()
@@ -531,7 +573,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.table.table[id]["info"] = info
         self.table.table[id]["path"] = path
         self.table.writeJson()
-        self.showArrangedTable(self.table.toTable())
+        #self.showArrangedTable(self.table.toTable())
         QMessageBox.about(self,"修改","完成！")
 
 
