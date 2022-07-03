@@ -29,7 +29,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "1.2.5"
+        self.version = "1.2.6"
 
         super(MyMainWin, self).__init__(parent)
 
@@ -192,7 +192,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             self.table.table[id]["path"] = path
 
         self.table.writeJson()
-        QMessageBox.about("成功","已保存")
+        QMessageBox.about(self,"成功","已保存")
             #print(id)
 
 
