@@ -29,7 +29,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "1.2.6"
+        self.version = "1.3.0"
 
         super(MyMainWin, self).__init__(parent)
 
@@ -41,7 +41,6 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             self.table.writeJson()
             self.table.readJson("data.json")
         self.setupUi(self)
-        self.tableWidget.setSortingEnabled(True)
         self.showArrangedTable(self.table.toTable())
 
         self.setWindowTitle("项目构建管理-v" + self.version)  #根据版本号改应用标题
@@ -75,6 +74,9 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.pushButton_saveNote.clicked.connect(self.saveNote)
         self.pushButton_clearNote.clicked.connect(self.clearNote)
         self.tabWidget.setCurrentIndex(0)
+        self.radioButton_sort.clicked.connect(self.allowSort)  #QT允许自动排序会导致表格显示错乱。所以，尽量一直关着他
+
+
 
         #self.tableWidget.itemSelectionChanged.connect(self.saveChange)  # 自动读取并保存用户对格子的修改  # 取消该功能，因为他容易改错地方
         #self.selectedData = ''  #初始化修改的位置0，如果原始数据与现在数据不一样，就保存修改。
@@ -82,30 +84,53 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         #self.selectedCol = 0
         #self.oldID = ""
 
+    def allowSort(self):
+        """pqQT表格不能在允许排序的时候进行修改！"""
+        if self.radioButton_sort.isChecked():
+            self.tableWidget.setSortingEnabled(True)
+        else:
+            self.tableWidget.setSortingEnabled(False)
+
     def openNoteFrame(self):
         if self.frame_note.isHidden():
             try:
                 with open("note.txt",'r') as f:
-                    self.textEdit_note.setText(f.read())
+                    note = f.read()
+                    #print(note)
+                    self.plainTextEdit_note.setPlainText(note)
             except:
                 pass
             self.frame_note.show()
+            self.pushButton_note.setText("关闭备忘录")
         else:
+            self.pushButton_note.setText("备忘录")
             self.frame_note.hide()
 
     def clearNote(self):
-        self.textEdit_note.clear()
+        self.plainTextEdit_note.clear()
         with open("note.txt", 'w') as f:
             f.write("")
 
 
 
     def saveNote(self):
-        note = self.textEdit_note.toPlainText()
+        note = self.plainTextEdit_note.toPlainText()
         try:
             with open("note.txt",'w') as f:
                 f.write(note)
                 QMessageBox.about(self,"成功","已保存")
+        except Exception as e:
+            QMessageBox.about(self,"ERR",str(e))
+
+    def autoSaveNote(self):
+        note = self.plainTextEdit_note.toPlainText()
+        if note == "":
+            return 0
+
+        try:
+            print("save note")
+            with open("note.txt",'w') as f:
+                f.write(note)
         except Exception as e:
             QMessageBox.about(self,"ERR",str(e))
 
@@ -175,6 +200,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         print('ss')
 
     def saveChangedTable(self):
+        self.tableWidget.setSortingEnabled(False)
         rows = self.tableWidget.rowCount()
         for i in range(rows):
             id = self.tableWidget.item(i,7).text()
@@ -193,12 +219,14 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         self.table.writeJson()
         QMessageBox.about(self,"成功","已保存")
+
             #print(id)
 
 
 
 
     def saveChange(self):
+        self.tableWidget.setSortingEnabled(False)
         try:
             index = self.tableWidget.selectionModel().currentIndex()
             row = int(index.row())
@@ -241,6 +269,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         except Exception as e:
             print(e)
+
+
 
 
 
@@ -335,6 +365,19 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                     else:
                         self.table.addItem(plasmid)
 
+        if files == [""]:
+            plasmid = dataBase.PLASMID()
+            plasmid.info["name"] = self.plainTextEdit_name.toPlainText()
+            plasmid.info["abbr"] = self.lineEdit_abbr.text()
+            tags = self.lineEdit_tag.text().replace("，", ",")
+            plasmid.info["tag"] = tags
+            plasmid.info["info"] = self.plainTextEdit_info.toPlainText()
+            plasmid.info["path"] = self.lineEdit_path.text()
+            plasmid.info["status"] = self.comboBox.currentText()
+            if plasmid.info["name"] == "":
+                pass
+            else:
+                self.table.addItem(plasmid)
 
         self.table.writeJson()
         self.showArrangedTable(self.table.toTable())
@@ -355,6 +398,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         path,fileType= QFileDialog.getSaveFileName(self,"path","","excel(*.xlsx)")
         #print(path)
         self.table.writeTable(path)
+
 
 
 
@@ -398,7 +442,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.showArrangedTable(self.table.toTable())
 
     def showArrangedTable(self,sheet):
-
+        self.tableWidget.setSortingEnabled(False)
         self.tableWidget.setRowCount(len(sheet.index))
         brushR = QtGui.QBrush(QtGui.QColor(200, 86, 75))
         brushR.setStyle(QtCore.Qt.SolidPattern)
@@ -524,7 +568,10 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.showArrangedTable(newSheet)
 
     def showSelection(self):
+        self.tableWidget.setSortingEnabled(False)
+        self.radioButton_sort.setChecked(False)
         self.tabWidget.setCurrentIndex(1)
+        self.autoSaveNote()
         try:
             index = self.tableWidget.selectionModel().currentIndex()
             row = index.row()
@@ -573,7 +620,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.table.table[id]["info"] = info
         self.table.table[id]["path"] = path
         self.table.writeJson()
-        #self.showArrangedTable(self.table.toTable())
+        self.showArrangedTable(self.table.toTable())
         QMessageBox.about(self,"修改","完成！")
 
 

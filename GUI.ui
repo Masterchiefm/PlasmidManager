@@ -16,6 +16,10 @@
   <property name="windowTitle">
    <string>项目构建管理</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>ico.png</normaloff>ico.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
@@ -34,7 +38,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QTextEdit" name="textEdit_note">
+        <widget class="QPlainTextEdit" name="plainTextEdit_note">
          <property name="maximumSize">
           <size>
            <width>500</width>
@@ -497,6 +501,20 @@
           <enum>QFrame::Raised</enum>
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_9">
+          <item>
+           <widget class="QRadioButton" name="radioButton_sort">
+            <property name="text">
+             <string>排序开关</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="Line" name="line_2">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+           </widget>
+          </item>
           <item>
            <widget class="QLabel" name="label_row">
             <property name="text">
