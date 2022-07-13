@@ -574,8 +574,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.autoSaveNote()
         try:
             index = self.tableWidget.selectionModel().currentIndex()
-            row = index.row()
-            column = index.column()
+            self.row = index.row()
+            self.column = index.column()
             #print(str(row)+str(column)+"changed")
             #id = self.tableWidget.item(row,6).text()
             #print(id)
@@ -590,15 +590,15 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                 7:"id"
             }
 
-            self.plainTextEdit_selectedName.setPlainText(self.tableWidget.item(row,1).text())
-            self.lineEdit_selectedAbbr.setText(self.tableWidget.item(row,0).text())
-            self.plainTextEdit_selectedInfo.setPlainText(self.tableWidget.item(row,3).text())
-            self.lineEdit_selectedTag.setText(self.tableWidget.item(row,4).text())
-            self.comboBox_selectedStatus.setCurrentText(self.tableWidget.item(row,2).text())
-            self.lineEdit_selectedID.setText(self.tableWidget.item(row,7).text())
-            self.lineEdit_selectedPath.setText(self.tableWidget.item(row,5).text())
-            self.label_row.setText("当前选择"+str(row+1)+"行,")
-            self.label_col.setText(str(column+1)+"列")
+            self.plainTextEdit_selectedName.setPlainText(self.tableWidget.item(self.row,1).text())
+            self.lineEdit_selectedAbbr.setText(self.tableWidget.item(self.row,0).text())
+            self.plainTextEdit_selectedInfo.setPlainText(self.tableWidget.item(self.row,3).text())
+            self.lineEdit_selectedTag.setText(self.tableWidget.item(self.row,4).text())
+            self.comboBox_selectedStatus.setCurrentText(self.tableWidget.item(self.row,2).text())
+            self.lineEdit_selectedID.setText(self.tableWidget.item(self.row,7).text())
+            self.lineEdit_selectedPath.setText(self.tableWidget.item(self.row,5).text())
+            self.label_row.setText("当前选择"+str(self.row+1)+"行,")
+            self.label_col.setText(str(self.column+1)+"列")
 
 
         except Exception as e:
@@ -620,7 +620,15 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.table.table[id]["info"] = info
         self.table.table[id]["path"] = path
         self.table.writeJson()
-        self.showArrangedTable(self.table.toTable())
+
+        self.tableWidget.setItem(self.row,0,QTableWidgetItem(abbr))
+        self.tableWidget.setItem(self.row, 1, QTableWidgetItem(name))
+        self.tableWidget.setItem(self.row, 2, QTableWidgetItem(status))
+        self.tableWidget.setItem(self.row, 3, QTableWidgetItem(info))
+        self.tableWidget.setItem(self.row, 4, QTableWidgetItem(tag))
+        self.tableWidget.setItem(self.row, 5, QTableWidgetItem(path))
+
+        #self.showArrangedTable(self.table.toTable())
         QMessageBox.about(self,"修改","完成！")
 
 

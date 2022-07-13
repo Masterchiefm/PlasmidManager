@@ -25,7 +25,8 @@ class PLASMID:
             "tag":"",
             "info":"",
             "path":"",
-            "time":addTime
+            "time":addTime,
+            "parent":""
         }        
 
 
@@ -99,7 +100,6 @@ class TABLE:
         
 
 
-# In[ ]:
 
 
 
