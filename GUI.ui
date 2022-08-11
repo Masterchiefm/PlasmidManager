@@ -18,27 +18,27 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>ico.png</normaloff>ico.png</iconset>
+    <normaloff>../../.designer/backup/ico.png</normaloff>../../.designer/backup/ico.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
-     <widget class="QFrame" name="frame_note">
+     <widget class="QWidget" name="widget_note" native="true">
       <property name="maximumSize">
        <size>
         <width>510</width>
         <height>16777215</height>
        </size>
       </property>
-      <property name="frameShape">
-       <enum>QFrame::StyledPanel</enum>
-      </property>
-      <property name="frameShadow">
-       <enum>QFrame::Raised</enum>
-      </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
         <widget class="QPlainTextEdit" name="plainTextEdit_note">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>200</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="maximumSize">
           <size>
            <width>500</width>
@@ -86,72 +86,125 @@
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QSplitter" name="splitter_2">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
+        <widget class="QFrame" name="frame_folder">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <widget class="QSplitter" name="splitter">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <widget class="QTableWidget" name="tableWidget">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>600</height>
-            </size>
-           </property>
-           <property name="editTriggers">
-            <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-           </property>
-           <column>
-            <property name="text">
-             <string>简写</string>
+         <property name="maximumSize">
+          <size>
+           <width>1644444</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <item>
+           <widget class="TreeWidget" name="treeWidget_folders">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>16777215</height>
+             </size>
             </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>名称</string>
+            <column>
+             <property name="text">
+              <string>文件夹</string>
+             </property>
+            </column>
+            <item>
+             <property name="text">
+              <string>新建项目</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="frame_9">
+            <property name="frameShape">
+             <enum>QFrame::StyledPanel</enum>
             </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>状态</string>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
             </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>备注</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>标签</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>文件路径</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>添加时间</string>
-            </property>
-           </column>
-           <column>
-            <property name="text">
-             <string>id</string>
-            </property>
-           </column>
-          </widget>
-          <widget class="QWidget" name="layoutWidget">
+            <layout class="QHBoxLayout" name="horizontalLayout_13">
+             <item>
+              <widget class="QPushButton" name="pushButton_add_folder">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>新建文件夹</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_del_folder">
+               <property name="text">
+                <string>删除选中文件夹</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QFrame" name="frame_6">
+         <property name="frameShape">
+          <enum>QFrame::StyledPanel</enum>
+         </property>
+         <property name="frameShadow">
+          <enum>QFrame::Raised</enum>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <item>
+           <widget class="TableWidget" name="tableWidget_projects">
+            <column>
+             <property name="text">
+              <string>项目名</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>状态</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>描述信息</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>文件路径</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>添加时间</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>id</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+          <item>
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <item>
              <widget class="QGroupBox" name="groupBox">
@@ -273,103 +326,105 @@
              </widget>
             </item>
            </layout>
-          </widget>
-         </widget>
-         <widget class="QWidget" name="widget" native="true">
-          <layout class="QHBoxLayout" name="horizontalLayout_2">
-           <item>
-            <widget class="QPushButton" name="pushButton_note">
-             <property name="text">
-              <string>备忘录</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_Open">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>打开文件</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_openPath">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>进入文件目录</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_share">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>分享选定项</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_WriteTable">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>导出全部</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_ImportTable">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>从表格导入</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_del">
-             <property name="font">
-              <font>
-               <family>Arial</family>
-               <weight>50</weight>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>删除记录</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <item>
+              <widget class="QPushButton" name="pushButton_note">
+               <property name="text">
+                <string>备忘录</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_Open">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>打开文件</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_openPath">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>进入文件目录</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_share">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>分享选定项</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_WriteTable">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>导出全部</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_ImportTable">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>从表格导入</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_del">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>删除记录</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
@@ -518,12 +573,12 @@
           <item>
            <widget class="QLabel" name="label_row">
             <property name="text">
-             <string>行</string>
+             <string>当前选中：</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_col">
+           <widget class="QLabel" name="label_seleted_name">
             <property name="text">
              <string>列</string>
             </property>
@@ -542,7 +597,7 @@
           </font>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="tab">
           <attribute name="title">
@@ -555,41 +610,33 @@
               <number>6</number>
              </property>
              <item row="0" column="0">
-              <widget class="QLabel" name="label_2">
-               <property name="text">
-                <string>简写</string>
-               </property>
-              </widget>
-             </item>
-             <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit_abbr">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
                 <string>名称</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="0">
+             <item row="0" column="1">
+              <widget class="QPlainTextEdit" name="plainTextEdit_name">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>90</height>
+                </size>
+               </property>
+               <property name="tabChangesFocus">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
               <widget class="QLabel" name="label_6">
                <property name="text">
                 <string>状态</string>
                </property>
               </widget>
              </item>
-             <item row="2" column="1">
+             <item row="1" column="1">
               <widget class="QComboBox" name="comboBox">
                <property name="font">
                 <font>
@@ -635,14 +682,14 @@
                </item>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="2" column="0">
               <widget class="QLabel" name="label_3">
                <property name="text">
                 <string>标签</string>
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="2" column="1">
               <widget class="QLineEdit" name="lineEdit_tag">
                <property name="font">
                 <font>
@@ -656,21 +703,40 @@
                </property>
               </widget>
              </item>
-             <item row="4" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
                 <string>备注</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+             <item row="3" column="1">
+              <widget class="QPlainTextEdit" name="plainTextEdit_info">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>200</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="tabChangesFocus">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
                 <string>路径</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
+             <item row="4" column="1">
               <widget class="QLineEdit" name="lineEdit_path">
                <property name="font">
                 <font>
@@ -684,7 +750,7 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
+             <item row="5" column="1">
               <widget class="QFrame" name="frame_3">
                <property name="minimumSize">
                 <size>
@@ -734,7 +800,7 @@
                </layout>
               </widget>
              </item>
-             <item row="7" column="1">
+             <item row="6" column="1">
               <spacer name="verticalSpacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -747,14 +813,14 @@
                </property>
               </spacer>
              </item>
-             <item row="8" column="0">
+             <item row="7" column="0">
               <widget class="QLabel" name="label_11">
                <property name="text">
                 <string>识别区</string>
                </property>
               </widget>
              </item>
-             <item row="8" column="1">
+             <item row="7" column="1">
               <widget class="QTextEdit" name="textEdit_recognitionArea">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -771,31 +837,8 @@
                <property name="autoFillBackground">
                 <bool>true</bool>
                </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QPlainTextEdit" name="plainTextEdit_name">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>90</height>
-                </size>
-               </property>
-               <property name="tabChangesFocus">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QPlainTextEdit" name="plainTextEdit_info">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>80</height>
-                </size>
-               </property>
-               <property name="tabChangesFocus">
-                <bool>true</bool>
+               <property name="readOnly">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -842,34 +885,6 @@
               </widget>
              </item>
              <item row="1" column="0">
-              <widget class="QLabel" name="label_7">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>简写</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_selectedAbbr">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="0">
               <widget class="QLabel" name="label_8">
                <property name="font">
                 <font>
@@ -883,7 +898,20 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="0">
+             <item row="1" column="1">
+              <widget class="QPlainTextEdit" name="plainTextEdit_selectedName">
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>90</height>
+                </size>
+               </property>
+               <property name="tabChangesFocus">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
               <widget class="QLabel" name="label_9">
                <property name="font">
                 <font>
@@ -897,7 +925,7 @@
                </property>
               </widget>
              </item>
-             <item row="3" column="1">
+             <item row="2" column="1">
               <widget class="QComboBox" name="comboBox_selectedStatus">
                <property name="font">
                 <font>
@@ -943,35 +971,7 @@
                </item>
               </widget>
              </item>
-             <item row="4" column="0">
-              <widget class="QLabel" name="label_10">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="text">
-                <string>标签</string>
-               </property>
-              </widget>
-             </item>
-             <item row="4" column="1">
-              <widget class="QLineEdit" name="lineEdit_selectedTag">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
-               </property>
-               <property name="clearButtonEnabled">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="0">
+             <item row="3" column="0">
               <widget class="QLabel" name="label_12">
                <property name="font">
                 <font>
@@ -981,11 +981,30 @@
                 </font>
                </property>
                <property name="text">
-                <string>备注</string>
+                <string>描述</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
+             <item row="3" column="1">
+              <widget class="QPlainTextEdit" name="plainTextEdit_selectedInfo">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>100</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>250</height>
+                </size>
+               </property>
+               <property name="tabChangesFocus">
+                <bool>true</bool>
+               </property>
+              </widget>
+             </item>
+             <item row="4" column="0">
               <widget class="QLabel" name="label_13">
                <property name="font">
                 <font>
@@ -999,7 +1018,7 @@
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
+             <item row="4" column="1">
               <widget class="QLineEdit" name="lineEdit_selectedPath">
                <property name="font">
                 <font>
@@ -1013,7 +1032,7 @@
                </property>
               </widget>
              </item>
-             <item row="7" column="1">
+             <item row="5" column="1">
               <widget class="QFrame" name="frame_8">
                <property name="minimumSize">
                 <size>
@@ -1065,7 +1084,7 @@
                </layout>
               </widget>
              </item>
-             <item row="8" column="1">
+             <item row="6" column="1">
               <spacer name="verticalSpacer_2">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
@@ -1078,7 +1097,21 @@
                </property>
               </spacer>
              </item>
-             <item row="9" column="1">
+             <item row="7" column="0">
+              <widget class="QLabel" name="label_14">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <weight>50</weight>
+                 <bold>false</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>新路径识别</string>
+               </property>
+              </widget>
+             </item>
+             <item row="7" column="1">
               <widget class="QTextEdit" name="textEdit_recognitionArea2">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -1098,45 +1131,11 @@
                  <height>1666666</height>
                 </size>
                </property>
-              </widget>
-             </item>
-             <item row="9" column="0">
-              <widget class="QLabel" name="label_14">
-               <property name="font">
-                <font>
-                 <family>Arial</family>
-                 <weight>50</weight>
-                 <bold>false</bold>
-                </font>
+               <property name="autoFillBackground">
+                <bool>false</bool>
                </property>
-               <property name="text">
-                <string>新路径识别</string>
-               </property>
-              </widget>
-             </item>
-             <item row="2" column="1">
-              <widget class="QPlainTextEdit" name="plainTextEdit_selectedName">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>90</height>
-                </size>
-               </property>
-               <property name="tabChangesFocus">
-                <bool>true</bool>
-               </property>
-              </widget>
-             </item>
-             <item row="5" column="1">
-              <widget class="QPlainTextEdit" name="plainTextEdit_selectedInfo">
-               <property name="maximumSize">
-                <size>
-                 <width>16777215</width>
-                 <height>80</height>
-                </size>
-               </property>
-               <property name="tabChangesFocus">
-                <bool>true</bool>
+               <property name="readOnly">
+                <bool>false</bool>
                </property>
               </widget>
              </item>
@@ -1188,6 +1187,21 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">TreeWidget</header>
+   <slots>
+    <signal>itemDraged()</signal>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>TableWidget</class>
+   <extends>QTableWidget</extends>
+   <header location="global">TableWidget</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
