@@ -33,6 +33,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         """质粒管理工具"""
         self.version = "2.0.0"
+        self.checkTaskList()  # 进程数量检查，确保只有一个进程运行
         super(MyMainWin, self).__init__(parent)
         self.setupUi(self)
         self.setWindowTitle("项目构建管理-v" + self.version)  # 根据版本号改应用标题
@@ -56,9 +57,9 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.textEdit_recognitionArea2.setStyleSheet("background:gray")
         self.setAcceptDrops(True)
 
-
-
-
+        self.action.triggered.connect(self.checkUpdate)  # 菜单栏
+        self.action_2.triggered.connect(self.about)
+        self.action_4.triggered.connect(self.donate)
 
 
 
@@ -683,6 +684,66 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.tableWidget_projects.resizeColumnToContents(0)
         self.tableWidget_projects.resizeColumnToContents(1)
         self.tableWidget_projects.resizeColumnToContents(2)
+
+
+
+    def checkTaskList(self):
+        taskList = getstatusoutput(['tasklist'])[1]
+
+        # print(taskList)
+        instance = taskList.count("PlasmidManager")
+        if instance == 1: #打包好后，本程序会算是一个运行中的实例，所以会是1
+            pass
+        elif instance == 0:    #调试的时候，实例会是0
+            pass
+        else:
+            QMessageBox.about(self,"错误","不能同时打开相同的进程")
+            print(instance)
+            sys.exit()
+
+
+
+    def checkUpdate(self):
+        """使用requests模块和GitHub api获取最新版本"""
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'}
+        latestInfo = get("https://gitee.com/api/v5/repos/MasterChiefm/PlasmidManager/releases/latest", timeout=2,  headers= headers)
+        print(latestInfo)
+        try:
+            info = latestInfo.text
+            info = loads(info)
+            print(info)
+            latestVersion = info["tag_name"]
+            releaseInfo = info["body"]
+            #print(latestVersion)
+
+            if latestVersion == self.version:
+                QMessageBox.about(self, "更新", "已经是最新")
+            else:
+                msg = latestVersion + "\n" + releaseInfo
+                QMessageBox.about(self,"更新",msg)
+                os.startfile("https://gitee.com/MasterChiefm/PlasmidManager/releases")
+
+
+
+        except Exception as e:
+            QMessageBox.about(self,"网络错误","无法连接到GitHub服务器")
+            print(e)
+
+    def about(self):
+        """打开应用主页"""
+        try:
+            os.startfile("https://gitee.com/MasterChiefm/PlasmidManager")
+        except:
+            pass
+
+    def donate(self):
+        """收款码"""
+        try:
+            os.startfile("https://cdn.jsdelivr.net/gh/Masterchiefm/pictures/68747470733a2f2f6d6f716971696e2e636e2f77702d636f6e74656e742f75706c6f6164732f323032302f30342f64617368616e672e706e67.png")
+        except:
+            pass
 
 
 
