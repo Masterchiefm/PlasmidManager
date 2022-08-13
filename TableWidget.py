@@ -33,3 +33,6 @@ class TableWidget(QtWidgets.QTableWidget):
         else:
             #print("g")
             self.setAcceptDrops(False)
+
+    def dropEvent(self, event: QtGui.QDropEvent) -> None:
+        return

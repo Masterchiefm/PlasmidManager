@@ -65,7 +65,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
 
-        with open("note.txt","r") as f:
+        with open("note.txt","r+") as f:
             note = f.read()
             print("note is ", note)
             if note == "":
