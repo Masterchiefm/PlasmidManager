@@ -120,7 +120,7 @@ class DATABASE():
 
         return structure
 
-    def getDirTree(self):
+    def getDirTree(self, query_id):
         '''生成目录结构'''
 
         # 列出所有目录
@@ -133,8 +133,7 @@ class DATABASE():
         # 根据一级节点信息生成目录树。
         trees = []
         for id in folder_ids:
-            parent_dir = 'root'
-            parent = data[id]['parent']
+            parent = self.data[id]['parent']
             if parent == '':
                 parent = 'root'
             tree = parent + "/" + id
@@ -144,7 +143,7 @@ class DATABASE():
         # 列出未归类的文件夹
         unsorted_id = []
         for id in folder_ids:
-            current_tree = data[id]["tree"]
+            current_tree = self.data[id]["tree"]
             if "root" in current_tree[:5]:
                 # 判断是否整理出完整路径
                 # print('sorted')
@@ -154,7 +153,6 @@ class DATABASE():
                 unsorted_id.append(id)
 
         # 循环寻找上一级目录，直到全部补齐
-
         while len(unsorted_id):
             for id in unsorted_id:
                 current_tree = self.data[id]["tree"]
@@ -168,8 +166,18 @@ class DATABASE():
                             new_tree = i + current_tree.replace(parent, '')
                             trees.remove(current_tree)
                             trees.append(new_tree)
-                            data[id]['tree'] = new_tree
-        return trees
+                            self.data[id]['tree'] = new_tree
+        #print("fffffffffffffftree is " + tree)
+        #print(trees)
+        for tree in trees:
+            a = tree.split("/")
+            #print("a= "+ str(a))
+            if query_id in a[-1]:
+
+                #print(trees)
+                return tree
+
+
 
     def writeJson(self, path="data.json"):
         path = path

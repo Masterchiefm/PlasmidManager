@@ -42,8 +42,8 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         try:
             self.data_base.readJson("data.json")
         except:
-            self.table.writeJson()
-            self.table.readJson("data.json")
+            self.data_base.writeJson()
+            self.data_base.readJson("data.json")
 
         self.getFolderStructure()
 
@@ -102,20 +102,63 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.pushButton_saveNote.clicked.connect(self.saveNote)
         self.pushButton_clearNote.clicked.connect(self.clearNote)
 
-        print(type(self.pushButton_clearNote.clicked))
-        print(type(self.treeWidget_folders.dropped))
+        #print(type(self.pushButton_clearNote.clicked))
+        #print(type(self.treeWidget_folders.dropped))
 
         self.treeWidget_folders.dropped.connect(self.changeParentFolder)
 
 
+        a = self.data_base.getDirTree("135fc4e2-1b3c-11ed-8187-ac1203fa91d1")
+        print(a)
 
 
 
-    def changeParentFolder(self, id, drop_to_item_id):
-        print("drag " + id + " to " + drop_to_item_id)
-        self.data_base.changeData(id, "parent", drop_to_item_id)
-        self.getFolderStructure()
-        self.getProjects()
+
+
+    def changeParentFolder(self, drag_id, drop_to_item_id):
+        drag_item_tree = self.data_base.getDirTree(drag_id)
+        drop_to_item_tree = self.data_base.getDirTree(drop_to_item_id)
+
+        #判断托到的是不是根文件夹
+        if drop_to_item_id == "root":
+            drop_to_item_tree = "root"
+            drop_to_item_id = ""
+
+        #判断托的是不是根或者未分类文件夹
+        if drag_id == "root":
+            return
+        elif drag_id == "unsorted":
+            return
+
+
+        drag_type = self.data_base.data[drag_id]["type"]
+        if drag_type == "folder" and drop_to_item_id == "unsorted":
+            drop_to_item_id = ""
+            self.data_base.changeData(drag_id, "parent", drop_to_item_id)
+            self.getFolderStructure()
+            self.getProjects()
+            return
+
+
+        if drag_type == "project":
+            self.data_base.changeData(drag_id, "parent", drop_to_item_id)
+            self.getFolderStructure()
+            self.getProjects()
+            return
+
+        elif (drag_type == "folder") and (not(drag_item_tree in drop_to_item_tree)):
+            self.data_base.changeData(drag_id, "parent", drop_to_item_id)
+            self.getFolderStructure()
+            self.getProjects()
+            return
+        elif (drag_item_tree in drop_to_item_tree):
+            self.getFolderStructure()
+            self.getProjects()
+            return
+
+
+
+
 
 
 
@@ -544,9 +587,16 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         root.setText(0, '所有文件')
         root.setWhatsThis(0,"root")
         root.setIcon(0,QIcon("ico.png"))
+
+        unsorted = QTreeWidgetItem()
+        unsorted.setText(0,"未分类")
+        unsorted.setWhatsThis(0, "unsorted")
+        unsorted.setIcon(0,QIcon("ico.png"))
+
         self.treeWidget_folders.clear()
 
         self.treeWidget_folders.addTopLevelItem(root)
+        self.treeWidget_folders.addTopLevelItem(unsorted)
 
         for id in self.data_base.data:
             try:
@@ -578,6 +628,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
             if type_ == "folder":
                 if parent == "":
                     root.addChild(locals()[id])
+                    unsorted.addChild(locals()[id])
                 else:
                     locals()[parent].addChild(locals()[id])
 
@@ -598,6 +649,11 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                 self.current_project_ids.append(id)
             elif (self.current_folder_id == "root") and (type_ == "project"):
                 self.current_project_ids.append(id)
+            elif (self.current_folder_id == "unsorted") and (parent == "root") and (type_ == "project"):
+                self.current_project_ids.append(id)
+
+
+
 
         self.showArrangedProject(self.current_project_ids)
 

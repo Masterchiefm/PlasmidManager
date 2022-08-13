@@ -11,20 +11,25 @@ class TableWidget(QtWidgets.QTableWidget):
         super(TableWidget, self).__init__(parent)
         #print("table loaded")
         self.setDragEnabled(True)
-        self.startPos = None
+        self.startPos = self.pos()
         self.setAcceptDrops(True)
 
 
     def mousePressEvent(self, e: QtGui.QMouseEvent) -> None:
         #print("mouse pressed")
+        self.setAcceptDrops(True)
         self.startPos = e.pos()
         super(TableWidget, self).mousePressEvent(e)
 
 
     def dragMoveEvent(self, e: QtGui.QDragMoveEvent) -> None:
         super(TableWidget, self).dragMoveEvent(e)
-        current_item = self.itemAt(self.startPos)
-        name = current_item.text()
-        id = current_item.whatsThis()
-        url = [QUrl(id),QUrl(name)]
-        e.mimeData().setUrls(url)
+        if e.source() == self:
+            current_item = self.itemAt(self.startPos)
+            name = current_item.text()
+            id = current_item.whatsThis()
+            url = [QUrl(id),QUrl(name)]
+            e.mimeData().setUrls(url)
+        else:
+            #print("g")
+            self.setAcceptDrops(False)
