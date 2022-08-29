@@ -24,6 +24,8 @@ import sys
 # 数据处理相关
 import pandas as pd
 import dataBase
+from shutil import copyfile, rmtree
+
 
 
 class MyMainWin(QMainWindow, Ui_MainWindow):
@@ -32,7 +34,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "2.0.0"
+        self.version = "2.0.1"
         self.checkTaskList()  # 进程数量检查，确保只有一个进程运行
         super(MyMainWin, self).__init__(parent)
         self.setupUi(self)
@@ -64,14 +66,18 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
 
-
-        with open("note.txt","r+") as f:
-            note = f.read()
-            print("note is ", note)
-            if note == "":
+        try:
+            with open("note.txt","r+") as f:
+                note = f.read()
+                print("note is ", note)
+                if note == "":
+                    self.widget_note.hide()
+                else:
+                    self.plainTextEdit_note.setPlainText(note)
+        except:
+            with open("note.txt","w") as f:
+                f.write("")
                 self.widget_note.hide()
-            else:
-                self.plainTextEdit_note.setPlainText(note)
 
 
         self.pushButton_ImportTable.clicked.connect(self.importSheet)
@@ -108,53 +114,124 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.treeWidget_folders.dropped.connect(self.changeParentFolder)
 
 
-        a = self.data_base.getDirTree("135fc4e2-1b3c-11ed-8187-ac1203fa91d1")
-        print(a)
+
+
+    def copyFile2ProgramDir(self):
+        current_path = os.path.abspath(".")
+        data_path = os.path.join(current_path,"data")
+
+        # 创建数据目录
+        if os.path.exists(data_path):
+            pass
+        else:
+            os.mkdir(data_path)
+
+        #
+        data = self.data_base.data
+        for id in data:
+            type_ = data[id]["type"]
+            # 判断是否是文件
+            if type_ != "project":
+                continue
+
+            path = data[id]["path"]
+            # 判断文件路径是否存在
+            try:
+                if os.path.isfile(path):
+                    pass
+                else:
+                    continue
+            except:
+                continue
+
+
+            # 判断是否需要复制
+
+            #print(path)
+            #print(os.path.isfile(path))
+            if data_path in path:
+                # 判断文件是否存在程序目录中
+                continue
+            else:
+                print("复制文件...")
+                file_name = path.split("/")[-1]
+                parent_path = os.path.join(data_path,id)
+
+                if os.path.exists(parent_path):
+                    pass
+                else:
+                    os.mkdir(parent_path)
+
+                new_path = os.path.join(parent_path,file_name)
+                copyfile(path,new_path)
+                data[id]["path"] = new_path
+        self.data_base.writeJson()
 
 
 
 
 
-    def changeParentFolder(self, drag_id, drop_to_item_id):
-        drag_item_tree = self.data_base.getDirTree(drag_id)
-        drop_to_item_tree = self.data_base.getDirTree(drop_to_item_id)
 
-        #判断托到的是不是根文件夹
+
+
+
+
+
+
+
+
+    def changeParentFolder(self, drag_ids, drop_to_item_id):
+
+
+        # 判断托到的是不是根文件夹
         if drop_to_item_id == "root":
             drop_to_item_tree = "root"
             drop_to_item_id = ""
+        else:
+            drop_to_item_tree = self.data_base.getDirTree(drop_to_item_id)
 
-        #判断托的是不是根或者未分类文件夹
-        if drag_id == "root":
-            return
-        elif drag_id == "unsorted":
-            return
+        for drag_id in drag_ids:
+            drag_item_tree = self.data_base.getDirTree(drag_id)
+
+            #判断托的是不是根或者未分类文件夹
+            if drag_id == "root":
+                pass
+            elif drag_id == "unsorted":
+                pass
+
+            # 判断拖动的类型
+            drag_type = self.data_base.data[drag_id]["type"]
+
+            # 拖的是文件夹，且拖到空白处：
+            if drag_type == "folder" and drop_to_item_id == "unsorted":
+                drop_to_item_id = ""
+                self.data_base.changeTmpData(drag_id, "parent", drop_to_item_id)
+                self.getFolderStructure()
+                self.getProjects()
+                continue
 
 
-        drag_type = self.data_base.data[drag_id]["type"]
-        if drag_type == "folder" and drop_to_item_id == "unsorted":
-            drop_to_item_id = ""
-            self.data_base.changeData(drag_id, "parent", drop_to_item_id)
-            self.getFolderStructure()
-            self.getProjects()
-            return
+            # 拖的是文件
+            if drag_type == "project":
+                self.data_base.changeTmpData(drag_id, "parent", drop_to_item_id)
+                self.getFolderStructure()
+                self.getProjects()
+                continue
 
+            # 拖子文件夹进进父文件夹
+            elif (drag_type == "folder") and (not(drag_item_tree in drop_to_item_tree)):
+                self.data_base.changeTmpData(drag_id, "parent", drop_to_item_id)
+                self.getFolderStructure()
+                self.getProjects()
+                continue
 
-        if drag_type == "project":
-            self.data_base.changeData(drag_id, "parent", drop_to_item_id)
-            self.getFolderStructure()
-            self.getProjects()
-            return
+            # 拖父文件夹进子文件
+            elif (drag_item_tree in drop_to_item_tree):
+                self.getFolderStructure()
+                self.getProjects()
+                continue
+        self.data_base.writeJson()
 
-        elif (drag_type == "folder") and (not(drag_item_tree in drop_to_item_tree)):
-            self.data_base.changeData(drag_id, "parent", drop_to_item_id)
-            self.getFolderStructure()
-            self.getProjects()
-            return
-        elif (drag_item_tree in drop_to_item_tree):
-            self.getFolderStructure()
-            self.getProjects()
-            return
 
 
 
@@ -317,12 +394,12 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
 
-            print(type(project))
+            #print(type(project))
             self.data_base.addItem(project)
 
 
-        self.data_base.writeJson()
         self.getProjects()
+        self.data_base.writeJson()
 
         #except Exception as e:
         #    QMessageBox.about(self,"错误","不支持该表格形式，请确保表格内有对应列" + str(e))
@@ -387,6 +464,13 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
                 row = item.row()
                 id = self.tableWidget_projects.item(row, 5).text()
                 self.data_base.data.pop(id)
+                path = self.tableWidget_projects.item(row, 3).text()
+                if id in path:
+
+                    folder = os.path.join( str(os.path.abspath(".")), "data/" + id)
+                    print(folder)
+                    print("删除"+ folder)
+                    rmtree(folder)
             except Exception as e:
                 print(e)
             #pass

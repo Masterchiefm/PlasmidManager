@@ -5,7 +5,8 @@ from PyQt5.QtCore import QMimeData, Qt, QUrl, pyqtSignal, QObject, QPoint
 
 
 class TreeWidget(QtWidgets.QTreeWidget):
-    dropped = pyqtSignal(str,str)
+    dropped = pyqtSignal(list,str)
+    errorGot = pyqtSignal(str)
     def __init__(self, parent):
         super(TreeWidget, self).__init__(parent)
         #print("hello tree")
@@ -21,6 +22,7 @@ class TreeWidget(QtWidgets.QTreeWidget):
         super(TreeWidget, self).mousePressEvent(e)
         self.startPos = e.pos()
         self.setAcceptDrops(True)
+        self.setDragEnabled(True)
 
 
     def dragMoveEvent(self, event: QtGui.QDragMoveEvent) -> None:
@@ -41,13 +43,16 @@ class TreeWidget(QtWidgets.QTreeWidget):
             #current_item_pos_y = str(self.startPos.y())
             #index = current_item.
             #url = [QUrl(id), QUrl(name), QUrl(current_item_pos_x), QUrl(current_item_pos_y)]
-            url = [QUrl(id), QUrl(name)]
+            url = [QUrl(id)]
             event.mimeData().setUrls(url)
 
             drop_to_item_pos = event.pos()
             #drop_to_item = self.itemAt(drop_to_item_pos)
 
             event.mimeData().setUrls(url)
+            if id == None:
+                event.ignore()
+                self.setDragEnabled(False)
 
 
 
@@ -55,39 +60,34 @@ class TreeWidget(QtWidgets.QTreeWidget):
     def dropEvent(self, event: QtGui.QDropEvent) -> None:
         data = event.mimeData()
 
-        if data.hasUrls():
-            #print(data.urls())
-            id = data.urls()[0].url()
-            #print(id)
-            name = data.urls()[1].url()
+        #if data.hasUrls():
+        id_urls = data.urls()
 
 
+        # 获取要扔到的目的地item
         drop_pos = event.pos()
         drop_to_item = self.itemAt(drop_pos)
 
+        # 判断是否扔到根目录，是，设id为root，不是，就设为目的地id
         if drop_to_item == None:
             drop_to_item_id = "root"
         else:
             drop_to_item_id = drop_to_item.whatsThis(0)
 
-        #if event.source() == self:
-            #x = int(data.urls()[2].url())
-            #y = int(data.urls()[3].url())
-            #print("folder drag " + name)
-            #drag_item_pos = QPoint(x, y)
-            #drag_item = self.itemAt(drag_item_pos)
 
-            #a = drag_item.takeChildren()
-            #for i in a:
-            #    print(i.text(0))
+        # 生成返回的id号
+        ids = []
+        for id_url in id_urls:
+            id = id_url.url()
+            if id:
+                ids.append(id)
 
-            #if drag_item == drop_to_item:
-            #    event.ignore()
-            #    self.setDragEnabled(False)
-             #   return
 
-        print("ts" + id +"   hhhh" +  drop_to_item_id)
-        self.dropped.emit(id,drop_to_item_id)
+        self.dropped.emit(ids, drop_to_item_id)
+
+
+
+
 
 
 

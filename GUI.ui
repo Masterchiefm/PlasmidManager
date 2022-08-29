@@ -24,9 +24,15 @@
    <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
      <widget class="QWidget" name="widget_note" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>450</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
-        <width>510</width>
+        <width>600</width>
         <height>16777215</height>
        </size>
       </property>
@@ -48,7 +54,7 @@
          <property name="font">
           <font>
            <family>Arial</family>
-           <pointsize>18</pointsize>
+           <pointsize>14</pointsize>
           </font>
          </property>
         </widget>
@@ -78,6 +84,12 @@
         <height>0</height>
        </size>
       </property>
+      <property name="maximumSize">
+       <size>
+        <width>16777215</width>
+        <height>16777215</height>
+       </size>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -95,7 +107,7 @@
          </property>
          <property name="maximumSize">
           <size>
-           <width>1644444</width>
+           <width>600</width>
            <height>16777215</height>
           </size>
          </property>

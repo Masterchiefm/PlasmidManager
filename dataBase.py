@@ -241,6 +241,14 @@ class DATABASE():
         self.data[id][data_type] = new_data
         self.writeJson()
 
+    def changeTmpData(self, id, data_type, new_data):
+        new_data = new_data
+        if data_type == "parent":
+            if new_data == "root":
+                new_data = ""
+
+        self.data[id][data_type] = new_data
+
 
 
 
