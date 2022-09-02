@@ -34,7 +34,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
     def __init__(self, parent=None):
         """质粒管理工具"""
-        self.version = "2.0.1"
+        self.version = "2.0.2"
         self.checkTaskList()  # 进程数量检查，确保只有一个进程运行
         super(MyMainWin, self).__init__(parent)
         self.setupUi(self)
@@ -107,6 +107,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         self.pushButton_note.clicked.connect(self.openNoteFrame)
         self.pushButton_saveNote.clicked.connect(self.saveNote)
         self.pushButton_clearNote.clicked.connect(self.clearNote)
+        self.pushButton_copy_file.clicked.connect(self.copyFile2ProgramDir)
 
         #print(type(self.pushButton_clearNote.clicked))
         #print(type(self.treeWidget_folders.dropped))
@@ -117,8 +118,10 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
 
     def copyFile2ProgramDir(self):
+        id = self.current_project_id
         current_path = os.path.abspath(".")
         data_path = os.path.join(current_path,"data")
+
 
         # 创建数据目录
         if os.path.exists(data_path):
@@ -128,53 +131,51 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
 
         #
         data = self.data_base.data
-        for id in data:
-            type_ = data[id]["type"]
-            # 判断是否是文件
-            if type_ != "project":
-                continue
 
-            path = data[id]["path"]
-            # 判断文件路径是否存在
-            try:
-                if os.path.isfile(path):
-                    pass
-                else:
-                    continue
-            except:
-                continue
+        type_ = data[id]["type"]
+        # 判断是否是文件
+        if type_ != "project":
+            return
+
+        old_path = data[id]["path"]
+        # 判断文件路径是否存在
+        try:
+            if os.path.isfile(old_path):
+                pass
+            else:
+                return
+        except:
+                return
 
 
             # 判断是否需要复制
 
             #print(path)
             #print(os.path.isfile(path))
-            if data_path in path:
-                # 判断文件是否存在程序目录中
-                continue
-            else:
-                print("复制文件...")
-                file_name = path.split("/")[-1]
-                parent_path = os.path.join(data_path,id)
 
-                if os.path.exists(parent_path):
-                    pass
-                else:
-                    os.mkdir(parent_path)
+        print("复制文件...")
+        file_name = old_path.split("/")[-1]
+        parent_path = os.path.join(data_path,id)
+        print(os.path.exists(parent_path))
+        if os.path.exists(parent_path):
+            pass
+        else:
+            print(str(parent_path))
+            os.mkdir(str(parent_path))
 
-                new_path = os.path.join(parent_path,file_name)
-                copyfile(path,new_path)
-                data[id]["path"] = new_path
-        self.data_base.writeJson()
+        default_path = os.path.join(parent_path, file_name)
+        path, fileType = QFileDialog.getSaveFileName(self,"保存jk路径", default_path,"")
+        if path:
+            new_path = os.path.abspath(path)
+            if new_path != default_path:
+                rmtree(parent_path)
 
-
-
-
-
-
-
-
-
+            copyfile(old_path, new_path)
+            data[id]["path"] = new_path
+            self.data_base.writeJson()
+            self.getProjects()
+        else:
+            rmtree(parent_path)
 
 
 
@@ -643,12 +644,12 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         row = index.row()
         self.current_project_col = col
         self.current_project_row =row
-        id = self.tableWidget_projects.item(row, 5).text()
+        self.current_project_id = self.tableWidget_projects.item(row, 5).text()
         name = self.tableWidget_projects.item(row, 0).text()
         status = self.tableWidget_projects.item(row, 1).text()
         info = self.tableWidget_projects.item(row, 2).text()
         path = self.tableWidget_projects.item(row, 3).text()
-        self.lineEdit_selectedID.setText(id)
+        self.lineEdit_selectedID.setText(self.current_project_id)
         self.plainTextEdit_selectedName.setPlainText(name)
         self.plainTextEdit_selectedInfo.setPlainText(info)
         self.comboBox_selectedStatus.setCurrentText(status)
