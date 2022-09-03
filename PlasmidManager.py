@@ -13,6 +13,7 @@ from PyQt5.QtGui import QIcon, QBrush, QColor, QDrag
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QMessageBox, QFileDialog, QInputDialog
 from GUI import Ui_MainWindow
+import icons_rc
 
 # 系统进程管理相关
 from subprocess import getstatusoutput
@@ -25,6 +26,7 @@ import sys
 import pandas as pd
 import dataBase
 from shutil import copyfile, rmtree
+import AlignmentTool
 
 
 
@@ -112,7 +114,30 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         #print(type(self.pushButton_clearNote.clicked))
         #print(type(self.treeWidget_folders.dropped))
 
+        #self.treeWidget_folders.dropped.connect(self.changeParentFolder)
         self.treeWidget_folders.dropped.connect(self.changeParentFolder)
+
+
+
+        self.pushButton_align.clicked.connect(self.align)
+        #self.subWin = AlignmentTool.MyMainWin()
+
+
+    def align(self):
+        plasmids = []
+        self.subWin = AlignmentTool.MyMainWin()
+        for item in self.tableWidget_projects.selectedItems():
+            row = item.row()
+            id = self.tableWidget_projects.item(row, 5).text()
+            path = self.tableWidget_projects.item(row, 3).text()
+            if os.path.isfile(path):
+                if  (".fa" in path.lower()[-4:]) or (".ab1" in path.lower()[-4:]) or (".gb" in path.lower()[-4:]) or (".dna" in path.lower()[-4:]):
+                    plasmids.append(path)
+        print(plasmids)
+        self.subWin.generateDNAList(plasmids)
+        self.subWin.show()
+
+
 
 
 
@@ -661,7 +686,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         folder = self.treeWidget_folders.currentItem()
         id = folder.whatsThis(0)
         name = folder.text(0)
-        self.label_seleted_name.setText(name)
+        # self.label_seleted_name.setText(name)
         self.current_folder_id= id
         self.current_folder_name = name
 
@@ -672,6 +697,7 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         root.setText(0, '所有文件')
         root.setWhatsThis(0,"root")
         root.setIcon(0,QIcon("ico.png"))
+        # root.setIcon(0, icons_rc.qt_resource_data)
 
         unsorted = QTreeWidgetItem()
         unsorted.setText(0,"未分类")
@@ -886,6 +912,9 @@ class MyMainWin(QMainWindow, Ui_MainWindow):
         except:
             pass
 
+import AlignmentTool
+
+
 
 
 
@@ -894,5 +923,6 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     win = MyMainWin()
+    subWin = AlignmentTool.MyMainWin()
     win.show()
     sys.exit(app.exec_())

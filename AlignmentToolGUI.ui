@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1203</width>
+    <width>1540</width>
     <height>868</height>
    </rect>
   </property>
@@ -137,13 +137,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <widget class="QPushButton" name="pushButton_add_line_to_Sanger">
-             <property name="text">
-              <string>加一行</string>
-             </property>
-            </widget>
-           </item>
           </layout>
          </widget>
         </item>
@@ -215,7 +208,11 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_DNA_file"/>
+           <widget class="QPlainTextEdit" name="plainTextEdit_DNA_file">
+            <property name="plainText">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QFrame" name="frame_4">
@@ -227,16 +224,16 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_4">
              <item>
-              <widget class="QPushButton" name="pushButton_clear_DNA_recognition">
+              <widget class="QPushButton" name="pushButton_add_DNA">
                <property name="text">
-                <string>清空</string>
+                <string>添加到队列</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_add_DNA">
+              <widget class="QPushButton" name="pushButton_clear_DNA_recognition">
                <property name="text">
-                <string>添加</string>
+                <string>清空</string>
                </property>
               </widget>
              </item>
@@ -329,7 +326,11 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_Sanger_file"/>
+           <widget class="QPlainTextEdit" name="plainTextEdit_Sanger_file">
+            <property name="plainText">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QFrame" name="frame_3">
@@ -341,20 +342,6 @@
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
              <item>
-              <widget class="QPushButton" name="pushButton_clear_Sanger_recognition">
-               <property name="text">
-                <string>清空</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="pushButton_add_Sanger">
-               <property name="text">
-                <string>添加</string>
-               </property>
-              </widget>
-             </item>
-             <item>
               <widget class="QPushButton" name="pushButton_align">
                <property name="text">
                 <string>比对</string>
@@ -362,9 +349,16 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton">
+              <widget class="QPushButton" name="pushButton_export_result">
                <property name="text">
                 <string>导出比对结果</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_clear_Sanger_recognition">
+               <property name="text">
+                <string>清空</string>
                </property>
               </widget>
              </item>
@@ -377,6 +371,13 @@
       </layout>
      </widget>
     </item>
+    <item>
+     <widget class="QProgressBar" name="progressBar">
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -384,7 +385,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1203</width>
+     <width>1540</width>
      <height>22</height>
     </rect>
    </property>

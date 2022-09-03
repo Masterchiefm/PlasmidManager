@@ -17,8 +17,8 @@
    <string>项目构建管理</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>../../.designer/backup/ico.png</normaloff>../../.designer/backup/ico.png</iconset>
+   <iconset resource="icons.qrc">
+    <normaloff>:/icon/ico.png</normaloff>:/icon/ico.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -583,16 +583,9 @@
            </widget>
           </item>
           <item>
-           <widget class="QLabel" name="label_row">
+           <widget class="QPushButton" name="pushButton_align">
             <property name="text">
-             <string>当前选中：</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_seleted_name">
-            <property name="text">
-             <string>列</string>
+             <string>批量比对</string>
             </property>
            </widget>
           </item>
@@ -1221,6 +1214,8 @@
    <header location="global">TableWidget</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
