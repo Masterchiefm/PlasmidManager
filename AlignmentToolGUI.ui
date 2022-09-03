@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
-    <height>520</height>
+    <width>1203</width>
+    <height>868</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -22,7 +22,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_6">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tabWidget_DNA">
       <property name="currentIndex">
        <number>2</number>
       </property>
@@ -32,10 +32,15 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout">
         <item>
-         <widget class="QTableWidget" name="tableWidget">
+         <widget class="QTableWidget" name="tableWidget_DNA">
           <column>
            <property name="text">
             <string>待比对样品名</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>DNA文件路径</string>
            </property>
           </column>
           <column>
@@ -103,7 +108,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QTableWidget" name="tableWidget_2">
+         <widget class="QTableWidget" name="tableWidget_Sanger">
           <column>
            <property name="text">
             <string>测序文件名</string>
@@ -150,7 +155,7 @@
        </attribute>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QListWidget" name="listWidget">
+         <widget class="QListWidget" name="listWidget_DNA">
           <item>
            <property name="text">
             <string>样品</string>
@@ -159,7 +164,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTableWidget" name="tableWidget_3">
+         <widget class="QTableWidget" name="tableWidget_result">
           <column>
            <property name="text">
             <string>测序文件</string>
@@ -178,10 +183,16 @@
     </item>
     <item>
      <widget class="QFrame" name="frame_5">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>200</height>
+       </size>
+      </property>
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>165</height>
+        <height>300</height>
        </size>
       </property>
       <property name="frameShape">
@@ -196,7 +207,7 @@
          <property name="maximumSize">
           <size>
            <width>16777215</width>
-           <height>150</height>
+           <height>16777215</height>
           </size>
          </property>
          <property name="title">
@@ -204,7 +215,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit_2"/>
+           <widget class="QPlainTextEdit" name="plainTextEdit_DNA_file"/>
           </item>
           <item>
            <widget class="QFrame" name="frame_4">
@@ -237,60 +248,70 @@
        </item>
        <item>
         <widget class="QGroupBox" name="groupBox_5">
+         <property name="maximumSize">
+          <size>
+           <width>300</width>
+           <height>16777215</height>
+          </size>
+         </property>
          <property name="title">
           <string>比对参数</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QGroupBox" name="groupBox_4">
-            <property name="title">
-             <string>Sanger测序有效范围</string>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_7">
-             <item>
-              <widget class="QLineEdit" name="lineEdit_Sanger_start">
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>30</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QLineEdit" name="lineEdit_Sanger_end">
-               <property name="maximumSize">
-                <size>
-                 <width>50</width>
-                 <height>16777215</height>
-                </size>
-               </property>
-               <property name="text">
-                <string>730</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_7">
+            <item>
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Sanger测序有效范围</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_Sanger_start">
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>30</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_Sanger_end">
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>730</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QGroupBox" name="groupBox_3">
-            <property name="title">
-             <string>比对最低得分</string>
-            </property>
-            <layout class="QHBoxLayout" name="horizontalLayout_8">
-             <item>
-              <widget class="QLineEdit" name="lineEdit_score">
-               <property name="text">
-                <string>0.9</string>
-               </property>
-              </widget>
-             </item>
-            </layout>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>比对最低得分</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="lineEdit_score">
+              <property name="text">
+               <string>0.9</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
@@ -308,7 +329,7 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QPlainTextEdit" name="plainTextEdit"/>
+           <widget class="QPlainTextEdit" name="plainTextEdit_Sanger_file"/>
           </item>
           <item>
            <widget class="QFrame" name="frame_3">
@@ -323,6 +344,13 @@
               <widget class="QPushButton" name="pushButton_clear_Sanger_recognition">
                <property name="text">
                 <string>清空</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="pushButton_add_Sanger">
+               <property name="text">
+                <string>添加</string>
                </property>
               </widget>
              </item>
@@ -356,7 +384,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>889</width>
+     <width>1203</width>
      <height>22</height>
     </rect>
    </property>
